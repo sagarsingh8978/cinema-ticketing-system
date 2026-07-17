@@ -1,7 +1,7 @@
 # ==========================================
 # STAGE 1: The Build Environment
 # ==========================================
-# 🌟 FIXED: Bumped to 8.14 to clear the minimum requirement restriction
+# 🌟 FIXED: Bumped to 8.14 to clear the minimum requirement   restriction
 FROM gradle:8.14-jdk21-alpine AS builder
 WORKDIR /build
 
