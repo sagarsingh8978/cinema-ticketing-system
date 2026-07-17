@@ -1,0 +1,53 @@
+name: Build and Deploy API Gateway
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'api-gateway/**' # 🌟 Triggers only on API Gateway changes
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Log in to GitHub Container Registry (GHCR)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./api-gateway
+          file: ./api-gateway/Dockerfile
+          push: true
+          tags: ghcr.io/sagarsingh8978/api-gateway:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy-to-local-k8s:
+    needs: build-and-push
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Apply Kubernetes Manifests and Restart Pods
+        run: |
+          kubectl apply -f k8s/apps-deployment.yaml
+          kubectl rollout restart deployment/api-gateway-deployment
