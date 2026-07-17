@@ -13,11 +13,11 @@ spec:
         app: api-gateway
     spec:
       containers:
-      - name: api-gateway-container
-        image: local-api-gateway:v2
-        imagePullPolicy: IfNotPresent            # Forces K8s to look locally on your machine
-        ports:
-        - containerPort: 8080
+        - name: api-gateway-container
+          image: ghcr.io/sagarsingh8978/api-gateway:latest
+          imagePullPolicy: Always           # Forces K8s to pull fresh image from GHCR
+          ports:
+            - containerPort: 8080
 ---
 apiVersion: v1
 kind: Service
@@ -26,8 +26,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 8080
-    targetPort: 8080
+    - port: 8080
+      targetPort: 8080
   selector:
     app: api-gateway
 ---
@@ -49,29 +49,29 @@ spec:
         app: user-service
     spec:
       containers:
-      - name: user-service-container
-        image: local-user-service:latest
-        imagePullPolicy: IfNotPresent           # Forces K8s to look locally on your machine
-        ports:
-        - containerPort: 8081
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: "prod"                  # 🌟 Activates application-prod.yaml natively!
-        - name: DB_URL
-          valueFrom:
-            configMapKeyRef:
-              name: application-config
-              key: USER_DB_URL
-        - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: database-credentials
-              key: POSTGRES_USER
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: database-credentials
-              key: POSTGRES_PASSWORD
+        - name: user-service-container
+          image: ghcr.io/sagarsingh8978/user-service:latest
+          imagePullPolicy: Always             # Forces K8s to pull fresh image from GHCR
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"                     # Activates application-prod.yaml natively!
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: application-config
+                  key: USER_DB_URL
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: database-credentials
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: database-credentials
+                  key: POSTGRES_PASSWORD
 ---
 apiVersion: v1
 kind: Service
@@ -80,8 +80,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 8081
-    targetPort: 8081
+    - port: 8081
+      targetPort: 8081
   selector:
     app: user-service
 ---
@@ -103,29 +103,29 @@ spec:
         app: movie-service
     spec:
       containers:
-      - name: movie-service-container
-        image: local-movie-service:v1
-        imagePullPolicy: IfNotPresent           # Forces K8s to look locally on your machine
-        ports:
-        - containerPort: 8081
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: "prod"                  # 🌟 Activates application-prod.yaml natively!
-        - name: DB_URL
-          valueFrom:
-            configMapKeyRef:
-              name: application-config
-              key: MOVIE_DB_URL
-        - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: database-credentials
-              key: POSTGRES_USER
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: database-credentials
-              key: POSTGRES_PASSWORD
+        - name: movie-service-container
+          image: ghcr.io/sagarsingh8978/movie-service:latest
+          imagePullPolicy: Always             # Forces K8s to pull fresh image from GHCR
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"                     # Activates application-prod.yaml natively!
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: application-config
+                  key: MOVIE_DB_URL
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: database-credentials
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: database-credentials
+                  key: POSTGRES_PASSWORD
 ---
 apiVersion: v1
 kind: Service
@@ -137,10 +137,10 @@ spec:
       targetPort: 8081
   selector:
     app: movie-service
-# ========================================================
-# Booking SERVICE (WITH PROD PROFILE ACTIVATED)
-# ========================================================
 ---
+# ========================================================
+# BOOKING SERVICE (WITH PROD PROFILE ACTIVATED)
+# ========================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -156,29 +156,29 @@ spec:
         app: booking-service
     spec:
       containers:
-      - name: booking-service-container
-        image: local-booking-service:v1
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 8081
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: "prod"
-        - name: DB_URL
-          valueFrom:
-            configMapKeyRef:
-              name: application-config
-              key: BOOKING_DB_URL
-        - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: database-credentials
-              key: POSTGRES_USER
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: database-credentials
-              key: POSTGRES_PASSWORD
+        - name: booking-service-container
+          image: ghcr.io/sagarsingh8978/booking-service:latest
+          imagePullPolicy: Always             # Forces K8s to pull fresh image from GHCR
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: application-config
+                  key: BOOKING_DB_URL
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: database-credentials
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: database-credentials
+                  key: POSTGRES_PASSWORD
 ---
 apiVersion: v1
 kind: Service
@@ -190,10 +190,10 @@ spec:
       targetPort: 8081
   selector:
     app: booking-service
-# ========================================================
-# Booking SERVICE (WITH PROD PROFILE ACTIVATED)
-# ========================================================
 ---
+# ========================================================
+# PAYMENT SERVICE (WITH PROD PROFILE ACTIVATED)
+# ========================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -209,29 +209,29 @@ spec:
         app: payment-service
     spec:
       containers:
-      - name: payment-service-container
-        image: local-payment-service:v1
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 8081
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: "prod"
-        - name: DB_URL
-          valueFrom:
-            configMapKeyRef:
-              name: application-config
-              key: PAYMENT_DB_URL
-        - name: DB_USER
-          valueFrom:
-            configMapKeyRef:
-              name: database-credentials
-              key: POSTGRES_USER
-        - name: DB_PASSWORD
-          valueFrom:
-            configMapKeyRef:
-              name: database-credentials
-              key: POSTGRES_PASSWORD
+        - name: payment-service-container
+          image: ghcr.io/sagarsingh8978/payment-service:latest
+          imagePullPolicy: Always             # Forces K8s to pull fresh image from GHCR
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: application-config
+                  key: PAYMENT_DB_URL
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: database-credentials
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: database-credentials
+                  key: POSTGRES_PASSWORD
 ---
 apiVersion: v1
 kind: Service
