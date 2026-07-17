@@ -52,7 +52,7 @@ jobs:
 
       - name: Force Clean Local Image Cache and Restart Pods
         run: |
-          # 🌟 FIXED: Clears the user-service image cache from the host runner node
-          docker rmi ghcr.io/sagarsingh8978/user-service:latest --force || true
+          # 🌟 FIXED: Uses PowerShell try/catch block to safely ignore errors on Windows
+          try { docker rmi ghcr.io/sagarsingh8978/user-service:latest --force } catch {}
           kubectl apply -f k8s/apps-deployment.yaml -n cinema-ticketing
           kubectl rollout restart deployment/user-service-deployment -n cinema-ticketing
