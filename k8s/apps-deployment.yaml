@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-gateway-deployment
+  namespace: cinema-ticketing
 spec:
   replicas: 1
   selector:
@@ -15,7 +16,7 @@ spec:
       containers:
         - name: api-gateway-container
           image: ghcr.io/sagarsingh8978/api-gateway:latest
-          imagePullPolicy: Always           # Forces K8s to pull fresh image from GHCR
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
 ---
@@ -23,6 +24,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: api-gateway
+  namespace: cinema-ticketing
 spec:
   type: ClusterIP
   ports:
@@ -38,6 +40,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user-service-deployment
+  namespace: cinema-ticketing
 spec:
   replicas: 1
   selector:
@@ -51,12 +54,12 @@ spec:
       containers:
         - name: user-service-container
           image: ghcr.io/sagarsingh8978/user-service:latest
-          imagePullPolicy: Always             # Forces K8s to pull fresh image from GHCR
+          imagePullPolicy: Always
           ports:
             - containerPort: 8081
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: "prod"                     # Activates application-prod.yaml natively!
+              value: "prod"
             - name: DB_URL
               valueFrom:
                 configMapKeyRef:
@@ -64,12 +67,12 @@ spec:
                   key: USER_DB_URL
             - name: DB_USER
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: database-credentials
                   key: POSTGRES_USER
             - name: DB_PASSWORD
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: database-credentials
                   key: POSTGRES_PASSWORD
 ---
@@ -77,6 +80,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: user-service
+  namespace: cinema-ticketing
 spec:
   type: ClusterIP
   ports:
@@ -92,6 +96,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: movie-service-deployment
+  namespace: cinema-ticketing
 spec:
   replicas: 1
   selector:
@@ -105,12 +110,12 @@ spec:
       containers:
         - name: movie-service-container
           image: ghcr.io/sagarsingh8978/movie-service:latest
-          imagePullPolicy: Always             # Forces K8s to pull fresh image from GHCR
+          imagePullPolicy: Always
           ports:
             - containerPort: 8081
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: "prod"                     # Activates application-prod.yaml natively!
+              value: "prod"
             - name: DB_URL
               valueFrom:
                 configMapKeyRef:
@@ -118,12 +123,12 @@ spec:
                   key: MOVIE_DB_URL
             - name: DB_USER
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: database-credentials
                   key: POSTGRES_USER
             - name: DB_PASSWORD
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: database-credentials
                   key: POSTGRES_PASSWORD
 ---
@@ -131,6 +136,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: movie-service
+  namespace: cinema-ticketing
 spec:
   ports:
     - port: 8081
@@ -145,6 +151,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: booking-service-deployment
+  namespace: cinema-ticketing
 spec:
   replicas: 1
   selector:
@@ -158,7 +165,7 @@ spec:
       containers:
         - name: booking-service-container
           image: ghcr.io/sagarsingh8978/booking-service:latest
-          imagePullPolicy: Always             # Forces K8s to pull fresh image from GHCR
+          imagePullPolicy: Always
           ports:
             - containerPort: 8081
           env:
@@ -171,12 +178,12 @@ spec:
                   key: BOOKING_DB_URL
             - name: DB_USER
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: database-credentials
                   key: POSTGRES_USER
             - name: DB_PASSWORD
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: database-credentials
                   key: POSTGRES_PASSWORD
 ---
@@ -184,6 +191,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: booking-service
+  namespace: cinema-ticketing
 spec:
   ports:
     - port: 8081
@@ -198,6 +206,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: payment-service-deployment
+  namespace: cinema-ticketing
 spec:
   replicas: 1
   selector:
@@ -211,7 +220,7 @@ spec:
       containers:
         - name: payment-service-container
           image: ghcr.io/sagarsingh8978/payment-service:latest
-          imagePullPolicy: Always             # Forces K8s to pull fresh image from GHCR
+          imagePullPolicy: Always
           ports:
             - containerPort: 8081
           env:
@@ -224,12 +233,12 @@ spec:
                   key: PAYMENT_DB_URL
             - name: DB_USER
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: database-credentials
                   key: POSTGRES_USER
             - name: DB_PASSWORD
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: database-credentials
                   key: POSTGRES_PASSWORD
 ---
@@ -237,6 +246,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: payment-service
+  namespace: cinema-ticketing
 spec:
   ports:
     - port: 8081

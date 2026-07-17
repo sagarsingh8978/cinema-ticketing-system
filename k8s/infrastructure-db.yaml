@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: database-credentials
+  namespace: cinema-ticketing #
 data:
   POSTGRES_USER: "postgres"
   POSTGRES_PASSWORD: "SystemPassword123!"
@@ -11,6 +12,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres-user-db
+  namespace: cinema-ticketing #
 spec:
   replicas: 1
   selector:
@@ -44,6 +46,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-user-service
+  namespace: cinema-ticketing #
 spec:
   ports:
   - port: 5432
@@ -55,6 +58,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres-movie-db
+  namespace: cinema-ticketing #
 spec:
   replicas: 1
   selector:
@@ -88,6 +92,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-movie-service
+  namespace: cinema-ticketing #
 spec:
   ports:
   - port: 5432
@@ -99,6 +104,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres-booking-db
+  namespace: cinema-ticketing #
 spec:
   replicas: 1
   selector:
@@ -132,6 +138,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-booking-service
+  namespace: cinema-ticketing #
 spec:
   ports:
   - port: 5432
@@ -143,6 +150,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres-payment-db
+  namespace: cinema-ticketing #
 spec:
   replicas: 1
   selector:
@@ -176,6 +184,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-payment-service
+  namespace: cinema-ticketing #
 spec:
   ports:
   - port: 5432

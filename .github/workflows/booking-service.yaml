@@ -1,10 +1,10 @@
-name: User-Service-workflow
+name: Booking-Service-Workflow
 
 on:
   push:
     branches: [ main ]
     paths:
-      - 'user-service/**' # 🌟 Triggers only on User Service changes
+      - 'booking-service/**' # 🌟 Triggers only on User Service changes
 
 # 🌟 ADDED: Grants permissions to write packages using GITHUB_TOKEN
 permissions:
@@ -42,7 +42,7 @@ jobs:
           context: ./user-service
           file: ./user-service/Dockerfile
           push: true
-          tags: ghcr.io/sagarsingh8978/user-service:latest
+          tags: ghcr.io/sagarsingh8978/booking-service:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -56,4 +56,4 @@ jobs:
       - name: Apply Kubernetes Manifests and Restart Pods
         run: |
           kubectl apply -f k8s/apps-deployment.yaml
-          kubectl rollout restart deployment/user-service-deployment
+          kubectl rollout restart deployment/booking-service-deployment
