@@ -1,0 +1,183 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-credentials
+data:
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "SystemPassword123!"
+---
+# === USER SERVICE DATABASE ===
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-user-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-user
+  template:
+    metadata:
+      labels:
+        app: postgres-user
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "user_db"
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              name: database-credentials
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: database-credentials
+              key: POSTGRES_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-user-service
+spec:
+  ports:
+  - port: 5432
+  selector:
+    app: postgres-user
+---
+# === MOVIE SERVICE DATABASE ===
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-movie-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-movie
+  template:
+    metadata:
+      labels:
+        app: postgres-movie
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "movie_db"
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              name: database-credentials
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: database-credentials
+              key: POSTGRES_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-movie-service
+spec:
+  ports:
+  - port: 5432
+  selector:
+    app: postgres-movie
+---
+# === BOOKING SERVICE DATABASE ===
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-booking-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-booking
+  template:
+    metadata:
+      labels:
+        app: postgres-booking
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "booking_db"
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              name: database-credentials
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: database-credentials
+              key: POSTGRES_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-booking-service
+spec:
+  ports:
+  - port: 5432
+  selector:
+    app: postgres-booking
+---
+# === PAYMENT SERVICE DATABASE ===
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-payment-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-payment
+  template:
+    metadata:
+      labels:
+        app: postgres-payment
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "payment_db"
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              name: database-credentials
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: database-credentials
+              key: POSTGRES_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-payment-service
+spec:
+  ports:
+  - port: 5432
+  selector:
+    app: postgres-payment

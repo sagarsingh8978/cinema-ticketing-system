@@ -1,0 +1,11 @@
+2026-06-21T15:39:57.791Z  INFO 1 --- [JavaGitActionsDemo] [main] com.poc.docker.poc.app.Application       : Starting Application v0.0.1-SNAPSHOT using Java 21.0.11 with PID 1 (/app/app-executor.jar started by root in /app)
+2026-06-21T15:39:57.795Z  INFO 1 --- [JavaGitActionsDemo] [main] com.poc.docker.poc.app.Application       : No active profile set, falling back to 1 default profile: "default"
+2026-06-21T15:39:59.113Z  INFO 1 --- [JavaGitActionsDemo] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8081 (http)
+2026-06-21T15:39:59.139Z  INFO 1 --- [JavaGitActionsDemo] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-21T15:39:59.139Z  INFO 1 --- [JavaGitActionsDemo] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-06-21T15:39:59.178Z  INFO 1 --- [JavaGitActionsDemo] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1290 ms
+2026-06-21T15:39:59.851Z  INFO 1 --- [JavaGitActionsDemo] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8081 (http) with context path '/'
+2026-06-21T15:39:59.875Z  INFO 1 --- [JavaGitActionsDemo] [main] com.poc.docker.poc.app.Application       : Started Application in 3.009 seconds (process running for 3.966)
+2026-06-21T15:40:34.493Z  INFO 1 --- [JavaGitActionsDemo] [http-nio-8081-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-21T15:40:34.494Z  INFO 1 --- [JavaGitActionsDemo] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-06-21T15:40:34.498Z  INFO 1 --- [JavaGitActionsDemo] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
