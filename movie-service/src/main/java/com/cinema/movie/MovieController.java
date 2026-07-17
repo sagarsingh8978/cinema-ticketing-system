@@ -19,6 +19,7 @@ public class MovieController {
     @PostMapping
     public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
         Movie savedMovie = movieRepository.save(movie);
+        System.out.print("Movie request created with id:"+savedMovie.getId());
         return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
     }
 

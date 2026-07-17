@@ -21,6 +21,7 @@ public class BookingController {
         booking.setStatus("PENDING");
         booking.setBookingTime(LocalDateTime.now());
         Booking savedBooking = bookingRepository.save(booking);
+        System.out.print("Booking created with id:"+savedBooking.getId());
         return new ResponseEntity<>(savedBooking, HttpStatus.CREATED);
     }
 
