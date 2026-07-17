@@ -2,19 +2,21 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cinema-edge-ingress
-  namespace: cinema-ticketing #
+  namespace: cinema-ticketing
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    # Use $1 to capture the full path and forward it intact to the gateway
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
   ingressClassName: nginx
   rules:
-  - host: cinema-booking.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: api-gateway
-            port:
-              number: 8080
+    - host: cinema-booking.local
+      http:
+        paths:
+          # Use a regex match to grab the entire path after the domain
+          - path: /(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: api-gateway
+                port:
+                  number: 8080
