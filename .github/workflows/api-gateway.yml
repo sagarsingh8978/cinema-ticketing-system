@@ -56,4 +56,4 @@ jobs:
       - name: Apply Kubernetes Manifests and Restart Pods
         run: |
           kubectl apply -f k8s/apps-deployment.yaml
-          kubectl rollout restart deployment/api-gateway-deployment
+          kubectl rollout restart deployment/api-gateway-deployment -n cinema-ticketing
