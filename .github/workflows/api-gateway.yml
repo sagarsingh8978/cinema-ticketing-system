@@ -6,7 +6,6 @@ on:
     paths:
       - 'api-gateway/**'
 
-# 🌟 ADD THIS: Grants the job permissions to write to the Packages registry
 permissions:
   contents: read
   packages: write
@@ -30,7 +29,6 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          # 🌟 CHANGE THIS: Uses the built-in, auto-generated GITHUB_TOKEN
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
@@ -43,8 +41,7 @@ jobs:
           file: ./api-gateway/Dockerfile
           push: true
           tags: ghcr.io/sagarsingh8978/api-gateway:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          no-cache: true # 🌟 FORCES DOCKER TO BUILD FRESH LAYER BY LAYER
 
   deploy-to-local-k8s:
     needs: build-and-push
@@ -53,7 +50,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Apply Kubernetes Manifests and Restart Pods
+      - name: Force Clean Local Image Cache and Restart Pods
         run: |
+          # 🌟 FIXED: Clears the api-gateway image cache from the host runner node
+          docker rmi ghcr.io/sagarsingh8978/api-gateway:latest --force || true
           kubectl apply -f k8s/apps-deployment.yaml -n cinema-ticketing
           kubectl rollout restart deployment/api-gateway-deployment -n cinema-ticketing
