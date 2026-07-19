@@ -1,8 +1,8 @@
-name: Booking-Service-Workflow
+name: Helm - Build and Deploy Booking Service
 
 on:
   push:
-    branches: [ main ]
+    branches: [ develop ]
     paths:
       - 'booking-service/**'
 
@@ -40,8 +40,10 @@ jobs:
           context: ./booking-service
           file: ./booking-service/Dockerfile
           push: true
-          tags: ghcr.io/sagarsingh8978/booking-service:latest
-          no-cache: true # 🌟 FORCES DOCKER TO BUILD FRESH LAYER BY LAYER
+          tags: |
+            ghcr.io/sagarsingh8978/booking-service:latest
+            ghcr.io/sagarsingh8978/booking-service:${{ github.sha }}
+          no-cache: true
 
   deploy-to-local-k8s:
     needs: build-and-push
@@ -50,9 +52,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Force Clean Local Image Cache and Restart Pods
+      - name: Deploy Booking Service via Helm
         run: |
-          # 🌟 FIXED: Uses PowerShell try/catch block to safely ignore errors on Windows
-          try { docker rmi ghcr.io/sagarsingh8978/booking-service:latest --force } catch {}
-          kubectl apply -f k8s/apps-deployment.yaml -n cinema-ticketing
-          kubectl rollout restart deployment/booking-service-deployment -n cinema-ticketing
+          # Upgrades ONLY the booking-service container tag, preserving everything else
+          helm upgrade --install cinema-ticketing-release ./charts/cinema-apps \
+            -n cinema-ticketing \
+            --reuse-values \
+            --set services.booking-service.tag=${{ github.sha }}

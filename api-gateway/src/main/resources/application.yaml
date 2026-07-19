@@ -8,21 +8,21 @@ spring:
     gateway:
       routes:
         - id: user-route
-          uri: http://user-service:8081
+          uri: http://user-service:8084  # 🌟 Updated Port
           predicates:
             - Path=/api/users/**
 
         - id: movie-route
-          uri: http://movie-service:8081
+          uri: http://movie-service:8082  # 🌟 Updated Port
           predicates:
             - Path=/api/movies/**
 
         - id: booking-route
-          uri: http://booking-service:8081
+          uri: http://booking-service:8081  # 🌟 Port 8081 is correct here
           predicates:
             - Path=/api/bookings/**
 
         - id: payment-route
-          uri: http://payment-service:8081
+          uri: http://payment-service:8083  # 🌟 Updated Port
           predicates:
             - Path=/api/payments/**

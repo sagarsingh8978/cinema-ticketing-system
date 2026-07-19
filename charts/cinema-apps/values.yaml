@@ -1,0 +1,39 @@
+global:
+  namespace: cinema-ticketing
+  imagePullPolicy: Always
+
+services:
+  api-gateway:
+    image: ghcr.io/sagarsingh8978/api-gateway
+    tag: latest
+    containerPort: 8080
+    servicePort: 8080  # 🌟 Updated to 8080 to perfectly align with your Ingress backend routing
+    replicas: 1
+
+  booking-service:
+    image: ghcr.io/sagarsingh8978/booking-service
+    tag: latest
+    containerPort: 8081
+    servicePort: 8081
+    replicas: 1
+
+  movie-service:
+    image: ghcr.io/sagarsingh8978/movie-service
+    tag: latest
+    containerPort: 8082
+    servicePort: 8082
+    replicas: 1
+
+  payment-service:
+    image: ghcr.io/sagarsingh8978/payment-service
+    tag: latest
+    containerPort: 8083
+    servicePort: 8083
+    replicas: 1
+
+  user-service:
+    image: ghcr.io/sagarsingh8978/user-service
+    tag: latest
+    containerPort: 8084
+    servicePort: 8084
+    replicas: 1

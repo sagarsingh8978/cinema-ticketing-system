@@ -1,0 +1,59 @@
+---
+{{- range $serviceName, $config := .Values.services }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $serviceName }}-deployment
+  namespace: {{ $.Values.global.namespace }}
+  labels:
+    app: {{ $serviceName }}
+spec:
+  replicas: {{ $config.replicas }}
+  selector:
+    matchLabels:
+      app: {{ $serviceName }}
+  template:
+    metadata:
+      labels:
+        app: {{ $serviceName }}
+    spec:
+      # 🌟 Forces backend services to wait until their respective manual database is ready
+      {{- if ne $serviceName "api-gateway" }}
+      initContainers:
+        - name: wait-for-database
+          image: busybox:1.36
+          command:
+            - 'sh'
+            - '-c'
+            - >
+              until nc -z -w 2 postgres-{{ replace "-service" "" $serviceName }}-service 5432; do
+                echo "Waiting for postgres-{{ replace "-service" "" $serviceName }}-service database to stand up...";
+                sleep 2;
+              done;
+      {{- end }}
+      containers:
+        - name: {{ $serviceName }}
+          image: "{{ $config.image }}:{{ $config.tag }}"
+          imagePullPolicy: {{ $.Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: {{ $config.containerPort }}
+          env:
+            {{- if ne $serviceName "api-gateway" }}
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: application-config
+                  key: {{ printf "%s_DB_URL" (replace "-" "_" $serviceName | upper) }}
+            {{- end }}
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-credentials
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-credentials
+                  key: POSTGRES_PASSWORD
+---
+{{- end }}
