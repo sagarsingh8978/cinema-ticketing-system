@@ -14,7 +14,7 @@ public class UserController {
 
     @PostMapping
     public User createUser(@RequestBody User user) {
-        System.out.print("started user service=====..");
+        System.out.print("started user service=====+..");
 
         return userRepository.save(user);
     }

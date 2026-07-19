@@ -54,8 +54,7 @@ jobs:
 
       - name: Deploy Payment Service via Helm
         run: |
-          # Upgrades ONLY the payment-service container tag, preserving everything else
-          helm upgrade --install cinema-ticketing-release ./charts/cinema-apps `
-            -n cinema-ticketing `
-            --reuse-values `
-            --set services.payment-service.tag=${{ github.sha }}
+            & "C:\Users\Sagar Singh\AppData\Local\Microsoft\WinGet\Links\helm.exe" upgrade --install cinema-ticketing-release ./charts/cinema-apps `
+              -n cinema-ticketing `
+              --reuse-values `
+              --set services.payment-service.tag=${{ github.sha }}

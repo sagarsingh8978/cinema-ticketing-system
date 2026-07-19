@@ -21,7 +21,7 @@ public class PaymentController {
         payment.setStatus("SUCCESS"); // Simulating instant payment success
         payment.setTransactionTime(LocalDateTime.now());
         Payment savedPayment = paymentRepository.save(payment);
-        System.out.print("Payment request created with id:"+savedPayment.getId());
+        System.out.print("Payment request created with id::"+savedPayment.getId());
         return new ResponseEntity<>(savedPayment, HttpStatus.CREATED);
     }
 
