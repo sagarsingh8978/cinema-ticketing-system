@@ -56,7 +56,7 @@ jobs:
       - name: Deploy API Gateway via Helm
         run: |
           # 🌟 Upgrades ONLY the api-gateway container tag, reusing all other existing application states
-          helm upgrade --install cinema-ticketing-release ./charts/cinema-apps \
-            -n cinema-ticketing \
-            --reuse-values \
+          helm upgrade --install cinema-ticketing-release ./charts/cinema-apps `
+            -n cinema-ticketing `
+            --reuse-values `
             --set services.api-gateway.tag=${{ github.sha }}

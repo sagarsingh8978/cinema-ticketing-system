@@ -55,7 +55,7 @@ jobs:
       - name: Deploy User Service via Helm
         run: |
           # Upgrades ONLY the user-service container tag, preserving everything else
-          helm upgrade --install cinema-ticketing-release ./charts/cinema-apps \
-            -n cinema-ticketing \
-            --reuse-values \
+          helm upgrade --install cinema-ticketing-release ./charts/cinema-apps `
+            -n cinema-ticketing `
+            --reuse-values `
             --set services.user-service.tag=${{ github.sha }}
